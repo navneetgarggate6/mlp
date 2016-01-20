@@ -1,0 +1,39 @@
+UPDATE products p,
+
+                (SELECT 
+
+                    ComparisionProductsSnapdeal.Company as Brand,
+
+
+                    products.productId as ProductId
+
+                        
+                    FROM products
+
+                    INNER JOIN 
+                        ComparisionProductsSnapdeal ON ComparisionProductsSnapdeal.MasterProductId=products.productId AND 
+                        ComparisionProductsSnapdeal.Price>0 AND 
+                        ComparisionProductsSnapdeal.Price IS NOT NULL AND 
+                        ComparisionProductsSnapdeal.Delivery IS NOT NULL AND 
+                        ComparisionProductsSnapdeal.auto_live_status = 'V' AND 
+                        ComparisionProductsSnapdeal.InStock = 1 
+
+                    
+                    
+                    WHERE
+                        
+                        products.brand IS NULL
+
+                    GROUP BY 
+                        products.productId 
+
+                    LIMIT 10000
+                    ) as leastpricetable
+
+                    SET 
+                        
+                        
+                        p.brand = leastpricetable.Brand
+                    WHERE
+
+                        p.productId = leastpricetable.ProductId

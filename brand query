@@ -1,0 +1,32 @@
+UPDATE products p,
+
+                (SELECT 
+
+                    ComparisionProductsSnapdeal.Company as Brand,
+
+
+                    products.productId as ProductId
+
+                        
+                    FROM products
+
+                    INNER JOIN 
+                        ComparisionProductsSnapdeal ON ComparisionProductsSnapdeal.MasterProductId=products.productId AND 
+                        
+                    WHERE
+                        
+                        products.brand IS NULL
+
+                    GROUP BY 
+                        products.productId 
+
+                    LIMIT 10000
+                    ) as leastpricetable
+
+                    SET 
+                        
+                        
+                        p.brand = leastpricetable.Brand
+                    WHERE
+
+                        p.productId = leastpricetable.ProductId
